@@ -2,7 +2,7 @@
 import { Pause, Play, RocketIcon, RotateCcw, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import useStudentStore, { Student } from "@/store/student";
 import { cn, formatTime, formatTimeRange, formatTimestamp } from "@/lib/utils";
 import {
@@ -16,22 +16,72 @@ type Props = {
   student: Student
 }
 
+const workerCode = `
+  let timers = {};
+
+  self.onmessage = function(e) {
+    const { type, id, duration } = e.data;
+    if (type === 'start') {
+      clearInterval(timers[id]);
+      let remainingTime = duration;
+      timers[id] = setInterval(() => {
+        remainingTime--;
+        self.postMessage({ type: 'tick', id, remainingTime });
+        if (remainingTime <= 0) {
+          clearInterval(timers[id]);
+          delete timers[id];
+          self.postMessage({ type: 'complete', id });
+        }
+      }, 1000);
+    } else if (type === 'stop') {
+      clearInterval(timers[id]);
+      delete timers[id];
+    }
+  };
+`;
+
 export default function TimerCard({ student }: Props) {
   const [isToggle, setIsToggle] = useState(false);
   const { updateStudent, deleteStudent, handleStart, handlePause, handleReset } = useStudentStore()
+  const workerRef = useRef<Worker | null>(null)
+
+  const initializeWorker = useCallback(() => {
+    if (!workerRef.current) {
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      workerRef.current = new Worker(URL.createObjectURL(blob));
+
+      workerRef.current.onmessage = (e) => {
+        const { type, id, remainingTime } = e.data;
+        if (type === 'tick') {
+          updateStudent(id, { timeLeft: remainingTime });
+        } else if (type === 'complete') {
+          updateStudent(id, { isActive: false, timeLeft: 0, isCompleted: true, endTime: new Date() });
+        }
+      };
+    }
+  }, [updateStudent]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (student.isActive && student.timeLeft > 0) {
-        updateStudent({ ...student, timeLeft: student.timeLeft - 1 })
-      } else if (student.isActive && student.timeLeft === 0) {
-        const endTime = new Date()
-        updateStudent({ ...student, isActive: false, endTime, isCompleted: true })
-      }
-    }, 1000)
+    initializeWorker();
 
-    return () => clearInterval(interval)
-  }, [student.timeLeft, student.isActive])
+    return () => {
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
+    };
+  }, [initializeWorker]);
+
+  useEffect(() => {
+    if (workerRef.current) {
+      if (student.isActive && student.timeLeft > 0) {
+        workerRef.current.postMessage({ type: 'start', id: student.id, duration: student.timeLeft });
+      } else {
+        workerRef.current.postMessage({ type: 'stop', id: student.id });
+      }
+    }
+  }, [student.id, student.isActive]);
+
 
 
   const onRemoveStudent = (id: number) => {

@@ -16,6 +16,7 @@ import { useDrawerStore } from '@/store/drawer'
 
 
 const subjects = [
+  "Abama",
   'Prisma',
   'Cermat',
   'Mathe',
@@ -87,7 +88,6 @@ export default function TimerForm() {
               <SelectValue placeholder='Select Duration' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='5'>5 seconds</SelectItem>
               <SelectItem value='40'>40 minutes</SelectItem>
               <SelectItem value='60'>1 hour</SelectItem>
               <SelectItem value='120'>2 hours</SelectItem>

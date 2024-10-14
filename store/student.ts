@@ -14,8 +14,14 @@ export type Student = {
 
 interface StudentState {
   students: Student[];
+  setStudents: (students: Student[]) => void;
   addStudent: (student: Student) => void;
-  updateStudent: (student: Student) => void;
+  updateStudent: (
+    id: number,
+    updates:
+      | Partial<Student>
+      | ((student: Student) => Student)
+  ) => void;
   deleteStudent: (id: number) => void;
   handleStart: (id: number) => void;
   handlePause: (id: number) => void;
@@ -24,18 +30,22 @@ interface StudentState {
 
 const useStudentStore = create<StudentState>((set) => ({
   students: [],
+  setStudents: (students) => set({ students }),
   addStudent: (student) => {
     set((state) => ({
       students: [...state.students, student],
     }));
   },
-  updateStudent: (student) => {
+  updateStudent: (id, updates) =>
     set((state) => ({
-      students: state.students.map((s) =>
-        s.id === student.id ? student : s
+      students: state.students.map((student) =>
+        student.id === id
+          ? typeof updates === "function"
+            ? updates(student)
+            : { ...student, ...updates }
+          : student
       ),
-    }));
-  },
+    })),
   deleteStudent: (id: number) => {
     set((state) => ({
       students: state.students.filter((s) => s.id !== id),
