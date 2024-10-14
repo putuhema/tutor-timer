@@ -35,7 +35,7 @@ export default function TimerForm() {
   });
 
   const onSubmit = () => {
-    const time = parseInt(form.studyDuration)
+    const time = parseInt(form.studyDuration) * 60
     addStudent({
       name: form.studentName,
       subject: form.subject,
