@@ -1,0 +1,31 @@
+"use client"
+import { useMediaQuery } from "@/hooks/use-media-query";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerTitle,
+} from "@/components/ui/drawer"
+import { Button } from "./ui/button";
+import TimerForm from "./timer-form";
+import { useDrawerStore } from "@/store/drawer";
+
+export default function FormContainer() {
+  const { isOpen, setIsOpen } = useDrawerStore()
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  if (!isDesktop) {
+    return (
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerContent>
+          <div className="p-8">
+            <DrawerTitle className="text-center">Add New Student</DrawerTitle>
+            <DrawerDescription className="text-center">add student and study time.</DrawerDescription>
+            <TimerForm />
+          </div>
+        </DrawerContent>
+      </Drawer>
+    )
+  }
+  return <TimerForm />
+}
