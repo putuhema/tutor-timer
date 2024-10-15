@@ -10,6 +10,7 @@ export type Student = {
   isCompleted: boolean;
   startTime: Date | null;
   endTime: Date | null;
+  elapsedTime: number;
 };
 
 interface StudentState {

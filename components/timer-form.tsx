@@ -46,6 +46,7 @@ export default function TimerForm() {
       isActive: false,
       startTime: null,
       endTime: null,
+      elapsedTime: 0,
       isCompleted: false
     })
     setForm({

@@ -15,27 +15,29 @@ import {
 type Props = {
   student: Student
 }
-
 const workerCode = `
   let timers = {};
+  let endTimes = {};
 
   self.onmessage = function(e) {
-    const { type, id, duration } = e.data;
+    const { type, id, timeLeft } = e.data;
     if (type === 'start') {
       clearInterval(timers[id]);
-      let remainingTime = duration;
+      endTimes[id] = Date.now() + (timeLeft * 1000);
       timers[id] = setInterval(() => {
-        remainingTime--;
-        self.postMessage({ type: 'tick', id, remainingTime });
+        const remainingTime = Math.max(0, Math.ceil((endTimes[id] - Date.now()) / 1000));
+        self.postMessage({ type: 'tick', id, timeLeft: remainingTime });
         if (remainingTime <= 0) {
           clearInterval(timers[id]);
           delete timers[id];
+          delete endTimes[id];
           self.postMessage({ type: 'complete', id });
         }
       }, 1000);
     } else if (type === 'stop') {
       clearInterval(timers[id]);
       delete timers[id];
+      delete endTimes[id];
     }
   };
 `;
@@ -44,16 +46,16 @@ export default function TimerCard({ student }: Props) {
   const [isToggle, setIsToggle] = useState(false);
   const { updateStudent, deleteStudent, handleStart, handlePause, handleReset } = useStudentStore()
   const workerRef = useRef<Worker | null>(null)
-
   const initializeWorker = useCallback(() => {
     if (!workerRef.current) {
       const blob = new Blob([workerCode], { type: 'application/javascript' });
       workerRef.current = new Worker(URL.createObjectURL(blob));
 
       workerRef.current.onmessage = (e) => {
-        const { type, id, remainingTime } = e.data;
+        const { type, id, timeLeft } = e.data;
         if (type === 'tick') {
-          updateStudent(id, { timeLeft: remainingTime });
+          updateStudent(id, { timeLeft });
+          localStorage.setItem(`student_${id}_timeLeft`, timeLeft.toString());
         } else if (type === 'complete') {
           updateStudent(id, { isActive: false, timeLeft: 0, isCompleted: true, endTime: new Date() });
         }
@@ -75,24 +77,29 @@ export default function TimerCard({ student }: Props) {
   useEffect(() => {
     if (workerRef.current) {
       if (student.isActive && student.timeLeft > 0) {
-        workerRef.current.postMessage({ type: 'start', id: student.id, duration: student.timeLeft });
+        workerRef.current.postMessage({ type: 'start', id: student.id, timeLeft: student.timeLeft });
       } else {
         workerRef.current.postMessage({ type: 'stop', id: student.id });
       }
     }
-  }, [student.id, student.isActive]);
+  }, [student.id, student.isActive, student.timeLeft]);
 
-
+  useEffect(() => {
+    const savedTimeLeft = localStorage.getItem(`student_${student.id}_timeLeft`);
+    if (savedTimeLeft) {
+      updateStudent(student.id, { timeLeft: parseInt(savedTimeLeft, 10) });
+    }
+  }, [student.id, updateStudent]);
 
   const onRemoveStudent = (id: number) => {
     deleteStudent(id)
+    localStorage.removeItem(`student_${id}_timeLeft`);
   }
 
   const handleStartTimer = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     handleStart(student.id)
   }
-
 
   const handlePauseTimer = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
@@ -102,8 +109,8 @@ export default function TimerCard({ student }: Props) {
   const handleResetTimer = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     handleReset(student.id)
+    localStorage.setItem(`student_${student.id}_timeLeft`, student.timeLeft.toString());
   }
-
 
   return isToggle ? (
     <Card className="transition-all duration-300" onClick={() => setIsToggle(false)}>
