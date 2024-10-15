@@ -16,7 +16,7 @@ import { useDrawerStore } from '@/store/drawer'
 import { createAvatar } from "@dicebear/core"
 import { lorelei, loreleiNeutral } from "@dicebear/collection"
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Dices } from 'lucide-react'
 
 
 const subjects = [
@@ -102,17 +102,28 @@ export default function TimerForm() {
     }
   }
 
+  const randomizeAvatar = () => {
+    setCurrentAvatar(Math.floor(Math.random() * collection.length))
+  }
+
   return (
-    <div className='w-full p-4 space-y-4'>
+    <div className='w-full space-y-4'>
       <div className='flex gap-4'>
         <div className='w-full flex flex-col items-center justify-center space-y-3'>
-          <Label htmlFor='studentAvatar'>Pick an Avatar</Label>
           <div className='w-24 h-24'>
             <Image className='border-2 select-none w-full h-full rounded-full object-cover' src={avatar} alt='Avatar' width={100} height={100} />
           </div>
           <div className='flex gap-4 items-center'>
-            <Button disabled={currentAvatar === 0} size="icon" variant="outline" onClick={() => pickAvatar(-1)}><ChevronLeft /></Button>
-            <Button disabled={currentAvatar === collection.length - 1} size="icon" variant="outline" onClick={() => pickAvatar(1)}><ChevronRight /></Button>
+            <Button disabled={currentAvatar === 0} size="icon" variant="outline" onClick={() => pickAvatar(-1)}>
+              <ChevronLeft />
+            </Button>
+            <Button size="icon" variant="outline" onClick={randomizeAvatar}><Dices /></Button>
+            <Button
+              disabled={currentAvatar === collection.length - 1}
+              size="icon" variant="outline"
+              onClick={() => pickAvatar(1)}>
+              <ChevronRight />
+            </Button>
           </div>
         </div>
         <div className='w-full'>

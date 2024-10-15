@@ -18,9 +18,11 @@ export default function FormContainer() {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerContent>
-          <div className="p-8">
-            <DrawerTitle className="text-center">Add New Student</DrawerTitle>
-            <DrawerDescription className="text-center">add student and study time.</DrawerDescription>
+          <div className="p-8 space-y-4">
+            <div>
+              <DrawerTitle className="text-center">Add New Student</DrawerTitle>
+              <DrawerDescription className="text-center">add student and study time.</DrawerDescription>
+            </div>
             <TimerForm />
           </div>
         </DrawerContent>

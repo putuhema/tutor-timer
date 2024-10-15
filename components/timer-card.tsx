@@ -13,7 +13,10 @@ import {
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
 import Image from "next/image";
-import { Badge } from "./ui/badge";
+import { Orbitron } from "next/font/google";
+
+
+const orbitron = Orbitron({ subsets: ["latin"], weight: "400" });
 
 
 type Props = {
@@ -48,7 +51,7 @@ const workerCode = `
 
 export default function TimerCard({ student }: Props) {
 
-  const [isToggle, setIsToggle] = useState(false);
+  const [isToggle, setIsToggle] = useState(true);
   const { updateStudent, deleteStudent, handleStart, handlePause, handleReset } = useStudentStore()
   const workerRef = useRef<Worker | null>(null)
 
@@ -125,10 +128,10 @@ export default function TimerCard({ student }: Props) {
   }
 
   return isToggle ? (
-    <Card className="relative transition-all duration-300 shadow-[0px_5px_0px_0px] z-50 bg-green-200 shadow-green-400 border-none" onClick={() => setIsToggle(false)}>
+    <Card className="relative transition-all duration-300 shadow-[0px_5px_0px_0px] z-50 bg-white border border-blue-500 shadow-blue-500" onClick={() => setIsToggle(!isToggle)}>
       <CardHeader className="flex-row justify-between items-center w-full gap-4 p-2 px-4">
         <div className="text-center">
-          <div className="bg-white rounded-full w-14 h-14  shadow-[inset_0_3px_0px] shadow-green-400">
+          <div className="bg-white border border-blue-500 rounded-full w-14 h-14  shadow-[inset_0_3px_0px] shadow-blue-500">
             <Image src={avatar} alt={student.name} width={80} height={80} className="rounded-full" />
           </div>
           <p className="font-bold capitalize">
@@ -140,14 +143,14 @@ export default function TimerCard({ student }: Props) {
 
             <Alert variant="success" className="w-full">
               <RocketIcon className="h-4 w-4" />
-              <AlertTitle>Horay!</AlertTitle>
+              <AlertTitle>Yippie 😆😆😆</AlertTitle>
               <AlertDescription>
-                <span className="capitalize">{student.name}</span> has learned for {formatTimestamp(student.duration)}
+                <span className="capitalize">{student.name}</span> has learned {student.subject} for {formatTimestamp(student.duration)}
               </AlertDescription>
             </Alert>
           ) : (
             <div className="text-center">
-              <p className="text-3xl font-bold text-center">{formatTime(student.timeLeft)}</p>
+              <p className={cn("text-3xl font-bold text-center", orbitron.className)}>{formatTime(student.timeLeft)}</p>
 
               <p className="text-xs text-muted-foreground">{formatTimeRange(student.startTime, student.endTime)}</p>
             </div>
@@ -163,7 +166,7 @@ export default function TimerCard({ student }: Props) {
       </CardHeader>
     </Card>
   ) : (
-    <Card className=" duration-300 transition-all" onClick={() => setIsToggle(true)}>
+    <Card className="relative transition-all duration-300 shadow-[0px_5px_0px_0px] bg-white border border-blue-500 shadow-blue-500" onClick={() => setIsToggle(!isToggle)}>
       <CardHeader className="flex-row justify-between w-full">
         <div className="cursor-pointer">
           <h3 className="text-lg font-bold capitalize">{student.name}</h3>
@@ -174,19 +177,18 @@ export default function TimerCard({ student }: Props) {
       <CardContent className="space-y-4">
         {
           student.isCompleted ? (
-
-            <Alert variant="success">
+            <Alert variant="success" className="w-full">
               <RocketIcon className="h-4 w-4" />
-              <AlertTitle>Horay!</AlertTitle>
+              <AlertTitle>Yippie 😆😆😆</AlertTitle>
               <AlertDescription>
-                <span className="capitalize">{student.name}</span> has learned for {formatTimestamp(student.duration)}
+                <span className="capitalize">{student.name}</span> has learned {student.subject} for {formatTimestamp(student.duration)}
               </AlertDescription>
             </Alert>
           )
             :
             (
-              <div className="flex flex-col gap-4 md:flex-row justify-between">
-                <p className="text-5xl font-bold text-center">{formatTime(student.timeLeft)}</p>
+              <div className="flex flex-col gap-4 justify-between">
+                <p className={cn("text-5xl font-bold text-center", orbitron.className)}>{formatTime(student.timeLeft)}</p>
                 <div className="flex justify-between gap-2">
                   <Button disabled={student.isActive || student.isCompleted} onClick={handleStartTimer} className="w-full"> <Play className="w-4 h-4 mr-2" />Start</Button>
                   <Button disabled={!student.isActive} onClick={handlePauseTimer} className="w-full" variant="outline">

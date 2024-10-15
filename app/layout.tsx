@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tutor Timer",
+  title: "Tutor.me",
   description: "Time you students with ease.",
 };
 
