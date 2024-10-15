@@ -11,6 +11,7 @@ export type Student = {
   startTime: Date | null;
   endTime: Date | null;
   elapsedTime: number;
+  avatar: string;
 };
 
 interface StudentState {

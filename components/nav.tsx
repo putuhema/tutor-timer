@@ -14,20 +14,18 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "./ui/badge";
 import { useDrawerStore } from "@/store/drawer";
-import { Button } from "./ui/button";
 import useStudentStore from "@/store/student";
 
 export default function Nav() {
   const { setIsOpen } = useDrawerStore()
   const { students } = useStudentStore();
   return (
-    <nav className="p-4 flex justify-between items-center">
-      <Button onClick={() => setIsOpen(true)} variant="outline" ><Plus className="w-4 h-4 mr-2" />Student</Button>
+    <nav className="p-4 flex justify-end items-center">
       <DropdownMenu>
         <DropdownMenuTrigger className="rounded-full">
           <Avatar className="w-8 h-8">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src="https://github.com/putuhema.png" alt="@putuhema" />
+            <AvatarFallback>PM</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="min-w-[200px]">

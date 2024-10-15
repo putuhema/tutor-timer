@@ -10,9 +10,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Button } from './ui/button'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import useStudentStore from '@/store/student'
 import { useDrawerStore } from '@/store/drawer'
+import { createAvatar } from "@dicebear/core"
+import { lorelei, loreleiNeutral } from "@dicebear/collection"
+import Image from 'next/image'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 
 const subjects = [
@@ -26,14 +30,45 @@ const subjects = [
   'Pra Baca Tulis'
 ]
 
+const collection = [
+  'Katherine',
+  "Mackenzie",
+  "Amaya",
+  "Jade",
+  "Sophia",
+  "Jude",
+  "Leah",
+  "Kimberly",
+  "Sawyer",
+  "Brian",
+  "Avery",
+  "Eliza",
+  "Sara",
+  "Eden",
+  "Nolan",
+  "Alexander",
+  "Liam",
+  "Valentina",
+  "Sarah",
+  "Riley"
+]
+
 export default function TimerForm() {
   const { addStudent } = useStudentStore()
   const { setIsOpen } = useDrawerStore()
+  const [currentAvatar, setCurrentAvatar] = useState(0)
   const [form, setForm] = useState({
     studentName: '',
     subject: '',
     studyDuration: '',
+
   });
+
+  const avatar = useMemo(() => {
+    return createAvatar(lorelei, {
+      seed: collection[currentAvatar]
+    }).toDataUri()
+  }, [currentAvatar, collection])
 
   const onSubmit = () => {
     const time = parseInt(form.studyDuration) * 60
@@ -47,7 +82,8 @@ export default function TimerForm() {
       startTime: null,
       endTime: null,
       elapsedTime: 0,
-      isCompleted: false
+      isCompleted: false,
+      avatar: collection[currentAvatar]
     })
     setForm({
       studentName: '',
@@ -58,11 +94,31 @@ export default function TimerForm() {
   }
 
 
+  const pickAvatar = (dir: number) => {
+    if (dir === 1 && currentAvatar < collection.length - 1) {
+      setCurrentAvatar(currentAvatar + 1)
+    } else if (dir === -1 && currentAvatar > 0) {
+      setCurrentAvatar(currentAvatar - 1)
+    }
+  }
+
   return (
     <div className='w-full p-4 space-y-4'>
-      <div>
-        <Label htmlFor='studentName'>Student Name</Label>
-        <Input onChange={(e) => setForm({ ...form, studentName: e.target.value })} value={form.studentName} id='studentName' placeholder='Enter Student name' type='text' className='w-full' />
+      <div className='flex gap-4'>
+        <div className='w-full flex flex-col items-center justify-center space-y-3'>
+          <Label htmlFor='studentAvatar'>Pick an Avatar</Label>
+          <div className='w-24 h-24'>
+            <Image className='border-2 select-none w-full h-full rounded-full object-cover' src={avatar} alt='Avatar' width={100} height={100} />
+          </div>
+          <div className='flex gap-4 items-center'>
+            <Button disabled={currentAvatar === 0} size="icon" variant="outline" onClick={() => pickAvatar(-1)}><ChevronLeft /></Button>
+            <Button disabled={currentAvatar === collection.length - 1} size="icon" variant="outline" onClick={() => pickAvatar(1)}><ChevronRight /></Button>
+          </div>
+        </div>
+        <div className='w-full'>
+          <Label htmlFor='studentName'>Student Name</Label>
+          <Input onChange={(e) => setForm({ ...form, studentName: e.target.value })} value={form.studentName} id='studentName' placeholder='Enter Student name' type='text' className='w-full' />
+        </div>
       </div>
       <div className='flex gap-4'>
         <div className='w-full'>

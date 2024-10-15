@@ -2,7 +2,7 @@
 import { Pause, Play, RocketIcon, RotateCcw, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useStudentStore, { Student } from "@/store/student";
 import { cn, formatTime, formatTimeRange, formatTimestamp } from "@/lib/utils";
 import {
@@ -10,6 +10,10 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
+import { createAvatar } from "@dicebear/core";
+import { lorelei } from "@dicebear/collection";
+import Image from "next/image";
+import { Badge } from "./ui/badge";
 
 
 type Props = {
@@ -43,9 +47,17 @@ const workerCode = `
 `;
 
 export default function TimerCard({ student }: Props) {
+
   const [isToggle, setIsToggle] = useState(false);
   const { updateStudent, deleteStudent, handleStart, handlePause, handleReset } = useStudentStore()
   const workerRef = useRef<Worker | null>(null)
+
+  const avatar = useMemo(() => {
+    return createAvatar(lorelei, {
+      seed: student.avatar
+    }).toDataUri()
+  }, [student.avatar])
+
   const initializeWorker = useCallback(() => {
     if (!workerRef.current) {
       const blob = new Blob([workerCode], { type: 'application/javascript' });
@@ -113,13 +125,15 @@ export default function TimerCard({ student }: Props) {
   }
 
   return isToggle ? (
-    <Card className="transition-all duration-300" onClick={() => setIsToggle(false)}>
-      <CardHeader className="flex-row justify-between items-center w-full gap-4">
-        <div>
-          <p className="cursor-pointer font-bold">
+    <Card className="relative transition-all duration-300 shadow-[0px_5px_0px_0px] z-50 bg-green-200 shadow-green-400 border-none" onClick={() => setIsToggle(false)}>
+      <CardHeader className="flex-row justify-between items-center w-full gap-4 p-2 px-4">
+        <div className="text-center">
+          <div className="bg-white rounded-full w-14 h-14  shadow-[inset_0_3px_0px] shadow-green-400">
+            <Image src={avatar} alt={student.name} width={80} height={80} className="rounded-full" />
+          </div>
+          <p className="font-bold capitalize">
             {student.name}
           </p>
-          <p className="text-muted-foreground text-sm">{student.subject}</p>
         </div>
         {
           student.isCompleted ? (
