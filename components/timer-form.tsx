@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Button } from './ui/button'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useStudentStore from '@/store/student'
 import { useDrawerStore } from '@/store/drawer'
 import { createAvatar } from "@dicebear/core"
@@ -61,8 +61,11 @@ export default function TimerForm() {
     studentName: '',
     subject: '',
     studyDuration: '',
-
   });
+
+  useEffect(() => {
+    setCurrentAvatar(Math.floor(Math.random() * collection.length))
+  }, [])
 
   const avatar = useMemo(() => {
     return createAvatar(lorelei, {
@@ -95,10 +98,18 @@ export default function TimerForm() {
 
 
   const pickAvatar = (dir: number) => {
-    if (dir === 1 && currentAvatar < collection.length - 1) {
-      setCurrentAvatar(currentAvatar + 1)
-    } else if (dir === -1 && currentAvatar > 0) {
-      setCurrentAvatar(currentAvatar - 1)
+    if (dir === 1) {
+      if (currentAvatar < collection.length - 1) {
+        setCurrentAvatar(currentAvatar + 1)
+      } else if (currentAvatar === collection.length - 1) {
+        setCurrentAvatar(0)
+      }
+    } else if (dir === -1) {
+      if (currentAvatar > 0) {
+        setCurrentAvatar(currentAvatar - 1)
+      } else if (currentAvatar === 0) {
+        setCurrentAvatar(collection.length - 1)
+      }
     }
   }
 
@@ -114,12 +125,11 @@ export default function TimerForm() {
             <Image className='border-2 select-none w-full h-full rounded-full object-cover' src={avatar} alt='Avatar' width={100} height={100} />
           </div>
           <div className='flex gap-4 items-center'>
-            <Button disabled={currentAvatar === 0} size="icon" variant="outline" onClick={() => pickAvatar(-1)}>
+            <Button size="icon" variant="outline" onClick={() => pickAvatar(-1)}>
               <ChevronLeft />
             </Button>
             <Button size="icon" variant="outline" onClick={randomizeAvatar}><Dices /></Button>
             <Button
-              disabled={currentAvatar === collection.length - 1}
               size="icon" variant="outline"
               onClick={() => pickAvatar(1)}>
               <ChevronRight />

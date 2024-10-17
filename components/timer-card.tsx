@@ -150,7 +150,7 @@ export default function TimerCard({ student }: Props) {
             </Alert>
           ) : (
             <div className="text-center">
-              <p className={cn("text-3xl font-bold text-center", orbitron.className)}>{formatTime(student.timeLeft)}</p>
+              <p className={cn("text-3xl  text-center", orbitron.className)}>{formatTime(student.timeLeft)}</p>
 
               <p className="text-xs text-muted-foreground">{formatTimeRange(student.startTime, student.endTime)}</p>
             </div>
