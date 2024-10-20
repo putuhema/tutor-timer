@@ -16,6 +16,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { PrismaContent } from "@/components/prisma-content"
+import BackButton from "@/components/back-button"
 
 
 export default function Page({ params }: { params: { level: string } }) {
@@ -35,6 +36,7 @@ export default function Page({ params }: { params: { level: string } }) {
   return (
     <>
       <div className="space-y-4 pb-20">
+        <BackButton link="/programs/prisma" title="Prisma" />
         <h2 className="text-lg font-bold">Prisma level {params.level} </h2>
         <div className="flex gap-2">
           <Input type="number" onChange={(e) => setPage(e.target.value)} value={page} name="level" placeholder="Search page number" />
@@ -62,12 +64,12 @@ export default function Page({ params }: { params: { level: string } }) {
       </div>
 
       <Drawer onOpenChange={setOpen} open={open}>
-        <DrawerContent className="h-[70%]">
+        <DrawerContent className="h-[80%]">
           <DrawerHeader>
             <DrawerTitle>Prisma Level {params.level}</DrawerTitle>
             <DrawerDescription>Page {selectedPage}</DrawerDescription>
           </DrawerHeader>
-          <div className="w-full flex justify-center items-center p-4 px-6 overflow-y-auto" >
+          <div className="w-full flex justify-center items-center p-4 px-8 overflow-y-auto" >
             <PrismaContent page={selectedPage} level={parseInt(params.level)} selectPage={onSelectPage} selectedPage={selectedPage} />
           </div>
         </DrawerContent>

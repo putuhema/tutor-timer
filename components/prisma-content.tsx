@@ -15,7 +15,7 @@ export const PrismaContent = ({ page, level, selectPage, selectedPage }: Props) 
 
   if (isLoading) {
     return <div className="flex justify-center w-full">
-      <Loader2 className="animated-spin text-muted-foreground w-4 h-4" />
+      <Loader2 className="animate-spin text-muted-foreground w-4 h-4" />
     </div>
   }
 
@@ -25,7 +25,7 @@ export const PrismaContent = ({ page, level, selectPage, selectedPage }: Props) 
 
   return (
     <div className="flex w-full">
-      <div className="w-full flex flex-col gap-4 items-start bg-accent rounded-l-lg p-2">
+      <div className="w-full flex flex-col gap-4 items-start bg-blue-50 text-blue-500 rounded-l-lg p-2">
         {
           data.slice(0, 10).map((d, index) =>
             <PrismaItem key={index} index={index + 1} operation={d.operation} result={d.answer} />)
@@ -51,8 +51,8 @@ type ItemProps = {
 function PrismaItem({ index, operation, result }: ItemProps) {
   return (
     <div className="flex items-center text-md gap-2 w-full" >
-      <p className="min-w-8">{index}.</p>
-      <p>{operation}</p>
+      <p className="min-w-5">{index}.</p>
+      <p className="text-muted-foreground">{operation}</p>
       <p>=</p>
       <p className="font-bold text-lg">{formatNumber(result)}</p>
     </div>
