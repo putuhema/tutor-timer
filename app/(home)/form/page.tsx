@@ -94,7 +94,7 @@ export default function Page() {
   }, [isSuccess])
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-lg mx-auto">
       <form onSubmit={onSubmit} className="space-y-3">
         <h1>Prisma Form</h1>
         <div className="flex gap-2 items-center">
@@ -136,8 +136,8 @@ export default function Page() {
                 value={form.operator1}
                 onValueChange={(value) => setForm({ ...form, operator1: value })}
               />
-              <Input disabled={isPending} ref={inputRef} type="number" value={form.firstNumber} onChange={(e) => setForm({ ...form, firstNumber: e.target.value })} placeholder="left number" />
-              <Input ref={secondInputRef} disabled={form.operator1 === "sqrt" || form.operator1 === "pow" || isPending} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="right number" />
+              <Input disabled={isPending} ref={inputRef} type="number" value={form.firstNumber} onChange={(e) => setForm({ ...form, firstNumber: e.target.value })} placeholder="first number" />
+              <Input ref={secondInputRef} disabled={form.operator1 === "sqrt" || form.operator1 === "pow" || isPending} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="second number" />
             </div>
           ) :
             <>
@@ -148,50 +148,70 @@ export default function Page() {
                     value={form.operator1}
                     onValueChange={(value) => setForm({ ...form, operator1: value })}
                   />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="first number" />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="second number" />
+                  <Input
+                    disabled={isPending}
+                    ref={inputRef}
+                    type="number"
+                    value={form.firstNumber}
+                    onChange={(e) => setForm({ ...form, firstNumber: e.target.value })}
+                    placeholder="first number" />
+                  <Input
+                    disabled={isPending}
+                    type="number"
+                    value={form.secondNumber}
+                    onChange={(e) => setForm({ ...form, secondNumber: e.target.value })}
+                    placeholder="second number" />
                 </div>
               }
               {inputQty === "3" &&
-                <div className="flex gap-4">
-                  <SelectOperator
-                    value={form.operator1}
-                    onValueChange={(value) => setForm({ ...form, operator1: value })}
-                  />
-                  <SelectOperator
-                    value={form.operator2}
-                    onValueChange={(value) => setForm({ ...form, operator2: value })}
-                  />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.firstNumber} onChange={(e) => setForm({ ...form, firstNumber: e.target.value })} placeholder="left number" />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="left number" />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.thirdNumber} onChange={(e) => setForm({ ...form, thirdNumber: e.target.value })} placeholder="left number" />
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-2">
+                    <SelectOperator
+                      value={form.operator1}
+                      onValueChange={(value) => setForm({ ...form, operator1: value })}
+                    />
+                    <SelectOperator
+                      value={form.operator2}
+                      onValueChange={(value) => setForm({ ...form, operator2: value })}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Input disabled={isPending} ref={inputRef} type="number" value={form.firstNumber} onChange={(e) => setForm({ ...form, firstNumber: e.target.value })} placeholder="first number" />
+                    <Input disabled={isPending} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="second number" />
+                    <Input disabled={isPending} type="number" value={form.thirdNumber} onChange={(e) => setForm({ ...form, thirdNumber: e.target.value })} placeholder="third number" />
+                  </div>
                 </div>
 
               }
 
               {inputQty === "4" &&
 
-                <div className="flex gap-4">
-                  <SelectOperator
-                    value={form.operator1}
-                    onValueChange={(value) => setForm({ ...form, operator1: value })}
-                  />
-                  <SelectOperator
-                    value={form.operator2}
-                    onValueChange={(value) => setForm({ ...form, operator2: value })}
-                  />
-                  <SelectOperator
-                    value={form.operator3}
-                    onValueChange={(value) => setForm({ ...form, operator3: value })}
-                  />
-                  <Input disabled={isPending} ref={inputRef}
-                    type="number"
-                    value={form.firstNumber}
-                    onChange={(e) => setForm({ ...form, firstNumber: e.target.value })}
-                    placeholder="first number" />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="left number" />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.thirdNumber} onChange={(e) => setForm({ ...form, thirdNumber: e.target.value })} placeholder="left number" />
-                  <Input disabled={isPending} ref={inputRef} type="number" value={form.fourthNumber} onChange={(e) => setForm({ ...form, fourthNumber: e.target.value })} placeholder="left number" />
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-2">
+                    <SelectOperator
+                      value={form.operator1}
+                      onValueChange={(value) => setForm({ ...form, operator1: value })}
+                    />
+                    <SelectOperator
+                      value={form.operator2}
+                      onValueChange={(value) => setForm({ ...form, operator2: value })}
+                    />
+                    <SelectOperator
+                      value={form.operator3}
+                      onValueChange={(value) => setForm({ ...form, operator3: value })}
+                    />
+
+                  </div>
+                  <div className="flex gap-2">
+                    <Input disabled={isPending} ref={inputRef}
+                      type="number"
+                      value={form.firstNumber}
+                      onChange={(e) => setForm({ ...form, firstNumber: e.target.value })}
+                      placeholder="first number" />
+                    <Input disabled={isPending} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="second number" />
+                    <Input disabled={isPending} type="number" value={form.thirdNumber} onChange={(e) => setForm({ ...form, thirdNumber: e.target.value })} placeholder="third number" />
+                    <Input disabled={isPending} type="number" value={form.fourthNumber} onChange={(e) => setForm({ ...form, fourthNumber: e.target.value })} placeholder="fourth number" />
+                  </div>
                 </div>
 
               }
