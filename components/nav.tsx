@@ -35,16 +35,16 @@ const links = [
     href: "/programs",
     icon: Book
   },
-  {
-    title: "Leaderboard",
-    href: '/leaderboard',
-    icon: Crown
-  },
-  {
-    title: "History",
-    href: "/history",
-    icon: HistoryIcon
-  }
+  // {
+  //   title: "Leaderboard",
+  //   href: '/leaderboard',
+  //   icon: Crown
+  // },
+  // {
+  //   title: "History",
+  //   href: "/history",
+  //   icon: HistoryIcon
+  // }
 ]
 
 
@@ -69,7 +69,7 @@ export default function Nav() {
       </div>
       <nav className="fixed bottom-0 w-full z-50">
         <div className="w-full rounded-t-xl bg-white border">
-          <ul className="flex justify-between group gap-4 items-center w-full p-2 px-8">
+          <ul className="flex justify-around group gap-4 items-center w-full p-2 px-8">
             {
               links.map((link) => (
                 <Link href={link.href} key={link.title}>
