@@ -107,9 +107,9 @@ export default function Page() {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Level</SelectLabel>
-                {[...Array(10)].map((_, index) => (
-                  <SelectItem key={index} value={`${index + 1}`}>
-                    Level {index + 1}
+                {[1, 2, 21, 3, 4, 5, 6, 7, 8, 9, 10].map((level, index) => (
+                  <SelectItem key={index} value={`${level}`}>
+                    Level {level === 21 ? '2+' : level}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -117,7 +117,7 @@ export default function Page() {
           </Select>
           <Input type="number" value={form.page} onChange={(e) => setForm({ ...form, page: e.target.value })} placeholder="page" />
           {
-            parseInt(form.level) < 5 ? (
+            parseInt(form.level) < 5 || form.level == "21" ? (
               <Select defaultValue={inputQty} value={inputQty} onValueChange={(value) => setInputQty(value)}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Input Qty" />
@@ -132,7 +132,7 @@ export default function Page() {
           }
         </div>
         {
-          parseInt(form.level) > 4 ? (
+          parseInt(form.level) > 4 && form.level !== "21" ? (
             <div className="flex items-center gap-4">
               <SelectOperator
                 value={form.operator1}
