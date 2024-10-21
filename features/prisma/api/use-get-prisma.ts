@@ -3,13 +3,6 @@ import { InferResponseType, InferRequestType } from "hono";
 
 import { client } from "@/lib/rpc";
 
-type ResponseType = InferResponseType<
-  typeof client.api.prisma.$get
->;
-type RequestType = InferRequestType<
-  typeof client.api.prisma.$get
->;
-
 export const useGetPrisma = (
   level: number,
   page: number,

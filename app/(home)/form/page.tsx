@@ -17,6 +17,8 @@ import { calculatePrisma, formatNumber } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
 import { useGetPrisma } from "@/features/prisma/api/use-get-prisma"
 import SelectOperator from "@/components/select-operator"
+import PrismaItem from "@/features/prisma/components/prisma-item"
+import PrismaColumn from "@/features/prisma/components/prisma-column"
 
 export default function Page() {
 
@@ -220,20 +222,7 @@ export default function Page() {
         <Button type="submit" disabled={!form.level || !form.firstNumber || !form.operator1 || ((form.operator1 === "sqrt" || form.operator1 === "pow") ? false : !form.secondNumber) || isPending} className="w-full">{isPending ? <Loader2 className="animate-spin w-4 h-4" /> : "Submit"}</Button>
 
       </form>
-
-      <div className="flex">
-        <div className="p-2 px-6 bg-accent">
-          {
-            data?.slice(0, 10).map((d, i) => <div key={d.id}>{i + 1}. {d.operation} = {formatNumber(d.answer)}</div>)
-          }
-        </div>
-        <div className="p-2 px-6">
-          {
-            data?.slice(10, 20).map((d, i) => <div key={d.id}>{i + 1}. {d.operation} = {formatNumber(d.answer)}</div>)
-          }
-        </div>
-      </div>
-
+      <PrismaColumn data={data} />
     </div>
   )
 }

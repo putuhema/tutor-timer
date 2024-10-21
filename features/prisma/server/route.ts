@@ -42,6 +42,36 @@ const app = new Hono()
 
       return c.json({ data });
     }
-  );
+  )
+  .post(
+    "/:id",
+    zValidator("param", z.object({ id: z.string() })),
+    zValidator("json", createPrismaSchema),
+    async (c) => {
+      const { id } = c.req.param();
+      const validatedFields = c.req.valid("json");
 
+      const [data] = await db
+        .update(prismaData)
+        .set(validatedFields)
+        .where(eq(prismaData.id, parseInt(id)))
+        .returning();
+
+      return c.json({ data });
+    }
+  )
+  .delete(
+    "/:id",
+    zValidator("param", z.object({ id: z.string() })),
+    async (c) => {
+      const { id } = c.req.param();
+
+      const [data] = await db
+        .delete(prismaData)
+        .where(eq(prismaData.id, parseInt(id)))
+        .returning();
+
+      return c.json({ data });
+    }
+  );
 export default app;

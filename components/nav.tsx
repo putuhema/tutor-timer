@@ -35,11 +35,11 @@ const links = [
     href: "/programs",
     icon: Book
   },
-  // {
-  //   title: "Leaderboard",
-  //   href: '/leaderboard',
-  //   icon: Crown
-  // },
+  {
+    title: "Profile",
+    href: '/profile',
+    icon: User
+  },
   // {
   //   title: "History",
   //   href: "/history",
