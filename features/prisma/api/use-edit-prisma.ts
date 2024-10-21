@@ -8,11 +8,11 @@ import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.prisma)[":id"]["$post"]
+  (typeof client.api.prisma)[":id"]["$put"]
 >;
 
 type RequestType = InferRequestType<
-  (typeof client.api.prisma)[":id"]["$post"]
+  (typeof client.api.prisma)[":id"]["$put"]
 >["json"];
 
 export const useEditPrisma = (id: number) => {
@@ -24,14 +24,12 @@ export const useEditPrisma = (id: number) => {
     RequestType
   >({
     mutationFn: async (body: RequestType) => {
-      const response = await client.api.prisma[":id"].$post(
-        {
-          json: body,
-          param: {
-            id: id.toString(),
-          },
-        }
-      );
+      const response = await client.api.prisma[":id"].$put({
+        json: body,
+        param: {
+          id: id.toString(),
+        },
+      });
 
       console.log(response);
 

@@ -43,7 +43,7 @@ const app = new Hono()
       return c.json({ data });
     }
   )
-  .post(
+  .put(
     "/:id",
     zValidator("param", z.object({ id: z.string() })),
     zValidator("json", createPrismaSchema),
