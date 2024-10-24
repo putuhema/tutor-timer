@@ -103,6 +103,7 @@ export default function TimerForm() {
               <SelectValue placeholder='Select Duration' />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value='1'>1 minutes</SelectItem>
               <SelectItem value='40'>40 minutes</SelectItem>
               <SelectItem value='60'>1 hour</SelectItem>
               <SelectItem value='120'>2 hours</SelectItem>

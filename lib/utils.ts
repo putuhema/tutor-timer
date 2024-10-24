@@ -179,3 +179,22 @@ export const formatNumber = (
 ): string => {
   return new Intl.NumberFormat(locale).format(num);
 };
+
+export const subjectColors = (subject: string) => {
+  switch (subject.toLocaleLowerCase()) {
+    case "prisma":
+      return "bg-red-100 border-red-600 text-red-500 shadow-red-500";
+    case "mathe":
+      return "bg-green-100 border-green-600 text-green-500 shadow-green-500";
+    case "l-kom":
+      return "bg-yellow-100 border-yellow-600 text-yellow-500 shadow-yellow-500";
+    case "cermat":
+      return "bg-teal-100 border-teal-600 text-teal-500 shadow-teal-500";
+    case "abama":
+      return "bg-blue-100 border-blue-600 text-blue-500 shadow-blue-500";
+    case "english":
+      return "bg-purple-100 border-purple-600 text-purple-500 shadow-purple-500";
+    default:
+      return "bg-blue-100 border-blue-600 text-blue-500 shadow-blue-500";
+  }
+};

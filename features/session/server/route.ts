@@ -39,6 +39,7 @@ const app = new Hono()
           // Student information
           studentId: students.id,
           studentName: students.fullname,
+          studentAvatar: students.avatar,
           // Subject information
           subjectId: subjects.id,
           subjectName: subjects.name,

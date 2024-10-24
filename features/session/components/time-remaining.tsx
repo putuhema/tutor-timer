@@ -9,9 +9,10 @@ type Props = {
   endTime: Date
   subjectTimeLogId: number;
   status: string;
+  endMsg: string;
 }
 
-export default function TimeRemaining({ subjectTimeLogId, endTime, status }: Props) {
+export default function TimeRemaining({ subjectTimeLogId, endTime, status, endMsg }: Props) {
   const { mutate } = usePatchSessionStudent()
   const timer = useRef<NodeJS.Timeout>()
   const [timeRemaining, setTimeRemaining] = useState<number>(1)
@@ -51,15 +52,13 @@ export default function TimeRemaining({ subjectTimeLogId, endTime, status }: Pro
   }, [timeRemaining])
 
   if (timeRemaining <= 0) {
-    return <p className="text-green-500 text-sm">Session Ended</p>
+    return <p className="text-sm">{endMsg}</p>
   }
 
 
-
-  return <div className="text-center">
-    <p className="text-5xl font-bold">
+  return <div className="text-center w-full">
+    <p className="text-4xl font-bold">
       {formatTime(timeRemaining)}
     </p>
-    <p className="text-sm text-muted-foreground">{Math.floor(timeRemaining / 60)} minutes left</p>
   </div>
 }
