@@ -5,12 +5,20 @@ import { useGetHistorySession } from "@/features/session/api/use-get-history-ses
 import SessionHistoryItem from "@/features/session/components/session-history-item"
 import { cn, formatTimeRange, subjectColors } from "@/lib/utils"
 import { format } from "date-fns"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Loader2 } from "lucide-react"
 import { useState } from "react"
 
 export default function Page() {
-  const { data: sessions } = useGetHistorySession(1)
+  const { data: sessions, isLoading } = useGetHistorySession(1)
   const [open, setOpen] = useState(false)
+
+  if (isLoading) {
+    return <div className="w-full flex justify-center">
+      <Loader2 className="animate-spin text-muted-foreground w-4 h-4 text-center" />
+    </div>
+  }
+
+
 
   return (
     <div>
@@ -20,8 +28,8 @@ export default function Page() {
             <button
               onClick={() => setOpen(!open)}
               className="flex items-center justify-between w-full">
-              <p className="font-bold">{format(new Date(session.date), "PPPP")}</p>
-              <ChevronDown className={cn("transform transition-all duration-200", open && "rotate-180")} />
+              <p className="font-bold text-sm">{format(new Date(session.date), "PPPP")}</p>
+              <ChevronDown className={cn("transform transition-all duration-200 w-4 h-4 text-muted-foreground", open && "rotate-180")} />
             </button>
             {
               open && (
