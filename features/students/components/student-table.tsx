@@ -19,10 +19,11 @@ import {
 
 import { useGetStudents } from '../api/use-get-students'
 import Avatar from '@/components/avatar'
-import { Delete, Ellipsis, PenLine } from "lucide-react"
+import { Ellipsis, PenLine } from "lucide-react"
 import { useSheetStore } from "@/store/sheet"
 import { useRouter } from "next/navigation"
 import DeleteButton from "./delete-button"
+import EditStudentForm from "./edit-student-form"
 
 export default function StudentTable() {
   const router = useRouter()
@@ -70,8 +71,8 @@ export default function StudentTable() {
                     <DeleteButton id={student.id} />
                   </DropdownMenuContent>
                 </DropdownMenu>
-
               </TableCell>
+              <EditStudentForm id={student.id} />
             </TableRow>
           ))
         }

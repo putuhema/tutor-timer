@@ -15,6 +15,7 @@ export const useGetStudent = (id: string) => {
       const data = await res.json();
       return data.data;
     },
+    enabled: !!id,
   });
 
   return query;

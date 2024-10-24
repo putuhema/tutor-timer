@@ -26,17 +26,18 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useSheetStore } from "@/store/sheet"
 import AvatarPicker from "@/components/avatar-picker"
-import { useSearchParams } from "next/navigation"
 import { useGetStudent } from "../api/use-get-student"
 import { useEditStudent } from "../api/use-put-students"
 
+type Props = {
+  id: number;
+}
+
 const SHEET_ID = "edit-student-form"
 
-export default function EditStudentForm() {
-  const searchparams = useSearchParams()
-  const id = searchparams.get('id')
+export default function EditStudentForm({ id }: Props) {
 
-  const { data: student, isLoading } = useGetStudent(id!)
+  const { data: student } = useGetStudent((id || 0).toString())
 
   const { getSheet, toggleSheet } = useSheetStore()
   const { mutate, isSuccess } = useEditStudent()
@@ -59,7 +60,7 @@ export default function EditStudentForm() {
 
   const onSubmit = (values: z.infer<typeof createStudentSchema>) => {
     mutate({
-      id: parseInt(id!),
+      id: id,
       ...values
     })
   }
