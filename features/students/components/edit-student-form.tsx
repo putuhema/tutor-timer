@@ -5,7 +5,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,47 +23,67 @@ import { createStudentSchema } from "@/features/students/schema"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useCreateStudent } from "@/features/students/api/use-create-students"
 import { useEffect } from "react"
 import { useSheetStore } from "@/store/sheet"
 import AvatarPicker from "@/components/avatar-picker"
+import { useSearchParams } from "next/navigation"
+import { useGetStudent } from "../api/use-get-student"
+import { useEditStudent } from "../api/use-put-students"
 
-type Props = {
-  id: number
-}
+const SHEET_ID = "edit-student-form"
 
-export default function EditStudentForm({ id }: Props) {
-  const { isOpen, setIsOpen } = useSheetStore()
-  const { mutate, isSuccess } = useCreateStudent()
+export default function EditStudentForm() {
+  const searchparams = useSearchParams()
+  const id = searchparams.get('id')
+
+  const { data: student, isLoading } = useGetStudent(id!)
+
+  const { getSheet, toggleSheet } = useSheetStore()
+  const { mutate, isSuccess } = useEditStudent()
   const form = useForm<z.infer<typeof createStudentSchema>>({
     resolver: zodResolver(createStudentSchema),
     defaultValues: {
       fullname: '',
       nickname: '',
-      avatar: ''
+      avatar: '',
     }
   })
 
+  useEffect(() => {
+    if (student) {
+      form.setValue('fullname', student.fullname)
+      form.setValue('nickname', student.nickname)
+      form.setValue('avatar', student.avatar || '')
+    }
+  }, [student])
+
   const onSubmit = (values: z.infer<typeof createStudentSchema>) => {
-    mutate(values)
+    mutate({
+      id: parseInt(id!),
+      ...values
+    })
   }
 
   useEffect(() => {
     if (isSuccess) {
       form.reset()
-      setIsOpen(false)
+      toggleSheet(SHEET_ID, false)
+
     }
   }, [isSuccess])
+
+
   return (
 
     <>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <Button>Add Student</Button>
-        </SheetTrigger>
+      <Sheet
+        open={getSheet(SHEET_ID)?.isOpen}
+        onOpenChange={(open) => {
+          toggleSheet(SHEET_ID, open)
+        }}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Add New Student</SheetTitle>
+            <SheetTitle>Edit Student</SheetTitle>
             <SheetDescription>
               Add students to your class
             </SheetDescription>
@@ -105,7 +124,7 @@ export default function EditStudentForm({ id }: Props) {
                 name="avatar"
                 render={(({ field }) => (
                   <FormItem>
-                    <AvatarPicker onChange={(value: string) => {
+                    <AvatarPicker value={field.value} onChange={(value: string) => {
                       form.setValue('avatar', value)
                     }} />
                   </FormItem>

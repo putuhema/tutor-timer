@@ -20,9 +20,14 @@ import {
 import { useGetStudents } from '../api/use-get-students'
 import Avatar from '@/components/avatar'
 import { Delete, Ellipsis, PenLine } from "lucide-react"
+import { useSheetStore } from "@/store/sheet"
+import { useRouter } from "next/navigation"
 
 export default function StudentTable() {
+  const router = useRouter()
+  const { toggleSheet } = useSheetStore()
   const { data: students } = useGetStudents()
+
 
   return (
     <Table className='w-full'>
@@ -53,12 +58,18 @@ export default function StudentTable() {
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={
+                      () => {
+                        toggleSheet("edit-student-form", true)
+                        router.push(`/dashboard/students?id=${student.id}`)
+                      }
+                    }>
                       <PenLine className="w-4 h-4 mr-2" />
                       Edit</DropdownMenuItem>
                     <DropdownMenuItem className="text-red-500 hover:text-red-500/80 focus:text-red-500/80">
                       <Delete className="w-4 h-4 mr-2" />
-                      Delete</DropdownMenuItem>
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 

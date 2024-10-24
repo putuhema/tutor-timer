@@ -29,20 +29,26 @@ const collection = [
 ]
 
 type Props = {
+  value?: string | undefined;
   onChange: (value: string) => void;
 }
 
-export default function AvatarPicker({ onChange }: Props) {
+export default function AvatarPicker({ value, onChange }: Props) {
   const [currentAvatar, setCurrentAvatar] = useState(0)
+
   useEffect(() => {
+    if (value) {
+      setCurrentAvatar(collection.indexOf(value))
+      return
+    }
     setCurrentAvatar(Math.floor(Math.random() * collection.length))
-  }, [])
+  }, [value])
 
   const avatar = useMemo(() => {
     return createAvatar(lorelei, {
       seed: collection[currentAvatar]
     }).toDataUri()
-  }, [currentAvatar, collection])
+  }, [currentAvatar, collection, value])
 
 
   useEffect(() => {

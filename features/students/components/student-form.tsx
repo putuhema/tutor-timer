@@ -29,8 +29,9 @@ import { useEffect } from "react"
 import { useSheetStore } from "@/store/sheet"
 import AvatarPicker from "@/components/avatar-picker"
 
+const SHEET_ID = "student-form"
 export default function StudentForm() {
-  const { isOpen, setIsOpen } = useSheetStore()
+  const { getSheet, toggleSheet } = useSheetStore()
   const { mutate, isSuccess } = useCreateStudent()
   const form = useForm<z.infer<typeof createStudentSchema>>({
     resolver: zodResolver(createStudentSchema),
@@ -41,6 +42,7 @@ export default function StudentForm() {
     }
   })
 
+
   const onSubmit = (values: z.infer<typeof createStudentSchema>) => {
     mutate(values)
   }
@@ -48,13 +50,15 @@ export default function StudentForm() {
   useEffect(() => {
     if (isSuccess) {
       form.reset()
-      setIsOpen(false)
+      toggleSheet(SHEET_ID, false)
     }
   }, [isSuccess])
   return (
 
     <>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={getSheet(SHEET_ID)?.isOpen} onOpenChange={(open) => {
+        toggleSheet(SHEET_ID, open)
+      }}>
         <SheetTrigger asChild>
           <Button>Add Student</Button>
         </SheetTrigger>

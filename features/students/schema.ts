@@ -8,4 +8,5 @@ export const createStudentSchema = z.object({
     .string()
     .min(3, "Nickname must be at least 3 characters long"),
   avatar: z.string().min(3, "Pick an avatar").optional(),
+  id: z.number().optional(),
 });
