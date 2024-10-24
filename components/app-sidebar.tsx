@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, Timer } from "lucide-react"
 import Link from "next/link"
 
 // Menu items.
@@ -77,9 +77,9 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/dashboard/settings">
-                <Settings />
-                <span>Settings</span>
+              <Link href="/">
+                <Timer />
+                <span>Home</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

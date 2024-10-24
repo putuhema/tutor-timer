@@ -19,25 +19,7 @@ import { useDrawerStore } from "@/store/drawer";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const links = [
-  {
-    title: "Timer",
-    href: '/',
-    icon: Timer
-  },
-  {
-    title: "Progams",
-    href: "/programs",
-    icon: Book
-  },
-  {
-    title: "Profile",
-    href: '/profile',
-    icon: User
-  },
-]
-
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 
 export default function Nav() {
@@ -90,6 +72,9 @@ export default function Nav() {
           </Link>
           <Link href="/">
             <DropdownMenuItem> <TimerIcon className="w-4 h-4 mr-2 text-muted-foreground" /> Timer</DropdownMenuItem>
+          </Link>
+          <Link href="/dashboard/students">
+            <DropdownMenuItem> <DashboardIcon className="w-4 h-4 mr-2 text-muted-foreground" /> Dashboard(student)</DropdownMenuItem>
           </Link>
           <DropdownMenuItem> <User2Icon className="w-4 h-4 mr-2 text-muted-foreground" /> Profile</DropdownMenuItem>
           <DropdownMenuItem> <HistoryIcon className="w-4 h-4 mr-2 text-muted-foreground" /> History</DropdownMenuItem>

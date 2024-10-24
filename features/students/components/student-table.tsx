@@ -22,6 +22,7 @@ import Avatar from '@/components/avatar'
 import { Delete, Ellipsis, PenLine } from "lucide-react"
 import { useSheetStore } from "@/store/sheet"
 import { useRouter } from "next/navigation"
+import DeleteButton from "./delete-button"
 
 export default function StudentTable() {
   const router = useRouter()
@@ -66,10 +67,7 @@ export default function StudentTable() {
                     }>
                       <PenLine className="w-4 h-4 mr-2" />
                       Edit</DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-500 hover:text-red-500/80 focus:text-red-500/80">
-                      <Delete className="w-4 h-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
+                    <DeleteButton id={student.id} />
                   </DropdownMenuContent>
                 </DropdownMenu>
 

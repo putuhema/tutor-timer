@@ -74,6 +74,18 @@ const app = new Hono()
 
       return c.json({ data });
     }
-  );
+  )
+  .delete(
+    "/:id",
+    zValidator("param", z.object({ id: z.string() })),
+    async (c) => {
+      const { id } = c.req.valid("param");
+      await db
+        .delete(students)
+        .where(eq(students.id, parseInt(id)))
+        .returning();
 
+      return c.json({ data: true });
+    }
+  );
 export default app;
