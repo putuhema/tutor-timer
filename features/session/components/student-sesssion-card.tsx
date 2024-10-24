@@ -38,7 +38,7 @@ export default function StudentSessionCard({ studentSession }: Props) {
   return (
     <div className={cn('border p-2 rounded-lg shadow-[0_5px_0_0] shadow-blue-500 flex gap-2 justify-between', studentSession.status === "COMPLETED" && "border-green-500 shadow-green-500 text-muted-foreground")}>
       <div>
-        <p >{studentSession.studentName}</p>
+        <p className={cn(studentSession.status === "COMPLETED" && "line-through")} >{studentSession.studentName}</p>
         <Badge variant="outline"
           className={cn('border border-blue-500 text-blue-500', studentSession.status === "COMPLETED" && "border-green-500 text-green-500")}>
           {studentSession.subjectName}

@@ -51,7 +51,7 @@ export default function TimeRemaining({ subjectTimeLogId, endTime, status }: Pro
   }, [timeRemaining])
 
   if (timeRemaining <= 0) {
-    return <p className="text-green-500">Session Ended</p>
+    return <p className="text-green-500 text-sm">Session Ended</p>
   }
 
 

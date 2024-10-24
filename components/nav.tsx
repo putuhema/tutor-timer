@@ -5,7 +5,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import { Book, Crown, HistoryIcon, Home, Plus, Timer, TimerIcon, User, User2Icon, UserRoundPlus, Users } from "lucide-react"
+import { Book, HistoryIcon, Timer, TimerIcon, User, User2Icon, UserRoundPlus, Users } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "./ui/badge";
 import { useDrawerStore } from "@/store/drawer";
-import { useMediaQuery } from "@/hooks/use-media-query";
 
-import { Pacifico } from "next/font/google";
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -40,24 +36,33 @@ const links = [
     href: '/profile',
     icon: User
   },
-  // {
-  //   title: "History",
-  //   href: "/history",
-  //   icon: HistoryIcon
-  // }
 ]
 
 
-const pacifico = Pacifico({ subsets: ["latin"], weight: "400" });
 
 export default function Nav() {
   const pathname = usePathname();
   const { setIsOpen } = useDrawerStore();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const pagetitle = () => {
+    switch (pathname) {
+      case "/":
+        return "Timer";
+      case "/programs":
+        return "Programs";
+      case "/profile":
+        return "Profile";
+      case "/form":
+        return "Prisma Form";
+      default:
+        return "Timer";
+    }
+  }
 
 
   return (
-    <nav className="p-4 flex justify-end items-center">
+    <nav className="p-4 flex justify-between items-center">
+      <p className="font-bold">{pagetitle()}</p>
       <DropdownMenu>
         <DropdownMenuTrigger className="rounded-full">
           <Avatar className="w-8 h-8">
@@ -81,12 +86,6 @@ export default function Nav() {
           <Link href="/programs">
             <DropdownMenuItem>
               <Book className="w-4 h-4 mr-2 text-muted-foreground" /> Programs
-            </DropdownMenuItem>
-          </Link>
-
-          <Link href="/dashboard">
-            <DropdownMenuItem>
-              <Book className="w-4 h-4 mr-2 text-muted-foreground" /> Dashboard
             </DropdownMenuItem>
           </Link>
           <Link href="/">
