@@ -79,7 +79,6 @@ export default function TimerForm() {
       studentId: parseInt(form.studentName),
       subjectId: parseInt(form.subject),
       teacherId: 1,
-      timerStatus: 'Pause',
       startTime: new Date(),
       endTime: new Date(new Date().getTime() + duration * 1000),
       location: 'Tommo',
