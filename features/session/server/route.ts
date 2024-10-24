@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createSessionSchema } from "../schema";
+import {
+  createSessionSchema,
+  SessionHistoryResponseSchema,
+} from "../schema";
 import { db } from "@/db";
 import {
   sessions,
@@ -10,7 +13,14 @@ import {
   subjects,
   subjectTimeLogs,
 } from "@/db/schema";
-import { and, between, eq } from "drizzle-orm";
+import {
+  and,
+  asc,
+  between,
+  desc,
+  eq,
+  sql,
+} from "drizzle-orm";
 
 const app = new Hono()
   .get(
@@ -73,13 +83,124 @@ const app = new Hono()
         .where(
           and(
             between(sessions.date, today, tomorrow),
-            eq(sessions.teacherId, teacherId)
+            eq(sessions.teacherId, teacherId),
+            eq(subjectTimeLogs.status, "IN_PROGRESS")
           )
         );
       return c.json({ data });
     }
   )
+  .get(
+    "/history/:teacherId",
+    zValidator(
+      "param",
+      z.object({
+        teacherId: z.string(),
+      })
+    ),
+    async (c) => {
+      const teacherId = parseInt(
+        c.req.valid("param").teacherId
+      );
 
+      const rawData = await db
+        .select({
+          date: sql<string>`to_char(${sessions.date}, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`.as(
+            "date"
+          ),
+          sessions: sql<string>`
+          array_agg(distinct
+            jsonb_build_object(
+              'sessionId', ${sessions.id},
+              'studentSessionId', ${sessionStudents.id},
+              'student', jsonb_build_object(
+                'id', ${students.id},
+                'name', ${students.fullname},
+                'avatar', ${students.avatar}
+              ),
+              'subject', jsonb_build_object(
+                'id', ${subjects.id},
+                'name', ${subjects.name}
+              ),
+              'startTime', to_char(${subjectTimeLogs.startTime}, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+              'endTime', to_char(${subjectTimeLogs.endTime}, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+              'duration', ${subjectTimeLogs.duration},
+              'status', ${subjectTimeLogs.status}
+            )
+          )`,
+        })
+        .from(sessions)
+        .rightJoin(
+          sessionStudents,
+          eq(sessions.id, sessionStudents.sessionId)
+        )
+        .rightJoin(
+          students,
+          eq(sessionStudents.studentId, students.id)
+        )
+        .rightJoin(
+          subjectTimeLogs,
+          eq(
+            sessionStudents.id,
+            subjectTimeLogs.sessionStudentsId
+          )
+        )
+        .rightJoin(
+          subjects,
+          eq(subjectTimeLogs.subjectId, subjects.id)
+        )
+        .where(and(eq(sessions.teacherId, teacherId)))
+        .groupBy(sessions.date)
+        .orderBy(desc(sessions.date));
+
+      const processedData = rawData.map((day) => {
+        const sessionsArray = Array.isArray(day.sessions)
+          ? day.sessions
+          : JSON.parse(day.sessions);
+
+        return {
+          date: day.date,
+          sessions: sessionsArray,
+        };
+      });
+
+      try {
+        const validatedResponse =
+          SessionHistoryResponseSchema.parse({
+            data: processedData,
+          });
+
+        return c.json({
+          data: validatedResponse.data,
+        });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          console.error(
+            "Validation errors:",
+            error.errors.map((e) => ({
+              path: e.path.join("."),
+              message: e.message,
+            }))
+          );
+
+          return c.json(
+            {
+              error: "Validation Error",
+              details: error.errors,
+            },
+            400
+          );
+        }
+
+        return c.json(
+          {
+            error: "Internal Server Error",
+          },
+          500
+        );
+      }
+    }
+  )
   .get(
     "/time/:sessionStudentId/:subjectId",
     zValidator(

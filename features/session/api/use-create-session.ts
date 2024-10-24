@@ -33,7 +33,6 @@ export const useCreateSession = () => {
       queryClient.invalidateQueries({
         queryKey: ["sessions", body.data.teacherId],
       });
-      toast("Created", { icon: "🎉", duration: 2000 });
     },
     onError: (error) => {
       console.log(error);

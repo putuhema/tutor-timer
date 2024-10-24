@@ -37,7 +37,6 @@ export const useDeleteSessionStudent = () => {
       queryClient.invalidateQueries({
         queryKey: ["sessions"],
       });
-      toast("Deleted", { icon: "🎉", duration: 2000 });
     },
     onError: (error) => {
       console.log(error);

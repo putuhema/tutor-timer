@@ -37,13 +37,8 @@ export const usePatchSessionStudent = () => {
       queryClient.invalidateQueries({
         queryKey: ["sessions"],
       });
-      toast("Session Updated", {
-        icon: "🎉",
-        duration: 2000,
-      });
     },
     onError: (error) => {
-      console.log(error);
       toast.error(error.message);
     },
   });

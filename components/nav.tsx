@@ -36,6 +36,8 @@ export default function Nav() {
         return "Profile";
       case "/form":
         return "Prisma Form";
+      case "/history":
+        return "History";
       default:
         return "Timer";
     }
@@ -73,11 +75,14 @@ export default function Nav() {
           <Link href="/">
             <DropdownMenuItem> <TimerIcon className="w-4 h-4 mr-2 text-muted-foreground" /> Timer</DropdownMenuItem>
           </Link>
+
+          <Link href="/history">
+            <DropdownMenuItem> <HistoryIcon className="w-4 h-4 mr-2 text-muted-foreground" /> History</DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator />
           <Link href="/dashboard/students">
             <DropdownMenuItem> <DashboardIcon className="w-4 h-4 mr-2 text-muted-foreground" /> Dashboard(student)</DropdownMenuItem>
           </Link>
-          <DropdownMenuItem> <User2Icon className="w-4 h-4 mr-2 text-muted-foreground" /> Profile</DropdownMenuItem>
-          <DropdownMenuItem> <HistoryIcon className="w-4 h-4 mr-2 text-muted-foreground" /> History</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </nav>

@@ -39,6 +39,8 @@ export default function StudentSessionCard({ studentSession }: Props) {
     }
   }
 
+  const learningTime = studentSession.duration! / 60 / 60 < 1 ? `${studentSession.duration! / 60} minutes` : `${studentSession.duration! / 60 / 60} hour(s)`
+
 
   return (
     <div className="flex gap-2 w-full justify-between">
@@ -67,7 +69,7 @@ export default function StudentSessionCard({ studentSession }: Props) {
             status={studentSession.status || ""}
             subjectTimeLogId={studentSession.subjectTimeLogsId || 0}
             endTime={new Date(studentSession.endTime || new Date())}
-            endMsg={`${happytext[Math.floor(Math.random() * happytext.length)]} ${studentSession.studentName} has learned ${studentSession.subjectName}. For ${Math.ceil(studentSession.duration! / 60)} hours.`}
+            endMsg={`${happytext[Math.floor(Math.random() * happytext.length)]} ${studentSession.studentName} has learned ${studentSession.subjectName}. For ${learningTime}`}
           />
         </div>
         <Button onClick={onDelete} variant="outline" size="icon"><X className="w-4 h-4" /></Button>
