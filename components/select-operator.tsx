@@ -17,17 +17,17 @@ export default function SelectOperator({ value, onValueChange }: Props) {
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select Operator" />
+        <SelectValue placeholder="Op" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Operator</SelectLabel>
-          <SelectItem value="add">Add (+)</SelectItem>
-          <SelectItem value="subtract">Subtract (-)</SelectItem>
-          <SelectItem value="multiply">Multiply (*)</SelectItem>
-          <SelectItem value="divide">Divide (/)</SelectItem>
-          <SelectItem value="sqrt">Square Root(sqrt)</SelectItem>
-          <SelectItem value="pow">Square(pow)</SelectItem>
+          <SelectItem value="add">+</SelectItem>
+          <SelectItem value="subtract">-</SelectItem>
+          <SelectItem value="multiply">x</SelectItem>
+          <SelectItem value="divide">/</SelectItem>
+          <SelectItem value="sqrt">sqrt</SelectItem>
+          <SelectItem value="pow">pow</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

@@ -60,9 +60,9 @@ export function calculatePrisma(
   // Validate inputs
   if (
     input < 2 ||
-    input > 4 ||
+    input > 5 ||
     operators.length < 1 ||
-    operators.length > 3
+    operators.length > 4
   ) {
     throw new Error("Invalid input parameters");
   }

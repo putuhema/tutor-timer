@@ -32,9 +32,11 @@ export default function Page() {
     secondNumber: "",
     thirdNumber: "",
     fourthNumber: "",
+    fifthNumber: "",
     operator1: "",
     operator2: "",
     operator3: "",
+    operator4: "",
     operations: "",
   })
 
@@ -61,12 +63,14 @@ export default function Page() {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const operators = [form.operator1, form.operator2, form.operator3].filter((op) => op.length > 0);
+    const operators = [form.operator1, form.operator2, form.operator3, form.operator4].filter((op) => op.length > 0);
     const numbers = [
       parseInt(form.firstNumber),
       parseInt(form.secondNumber),
       parseInt(form.thirdNumber),
-      parseInt(form.fourthNumber)]
+      parseInt(form.fourthNumber),
+      parseInt(form.fifthNumber),
+    ]
       .filter((num) => !Number.isNaN(num));
     const { operation, result: answer } = calculatePrisma(parseInt(inputQty),
       operators,
@@ -90,6 +94,7 @@ export default function Page() {
         secondNumber: "",
         thirdNumber: "",
         fourthNumber: "",
+        fifthNumber: "",
         operations: ""
       })
     }
@@ -126,6 +131,7 @@ export default function Page() {
                   <SelectItem value="2">2 Input(s)</SelectItem>
                   <SelectItem value="3">3 Input(s)</SelectItem>
                   <SelectItem value="4">4 Input(s)</SelectItem>
+                  <SelectItem value="5">5 Input(s)</SelectItem>
                 </SelectContent>
               </Select>
             ) : null
@@ -187,8 +193,7 @@ export default function Page() {
               }
 
               {inputQty === "4" &&
-
-                <div className="flex flex-col gap-4">
+                <div className="flex w-full flex-wrap flex-col gap-4">
                   <div className="flex gap-2">
                     <SelectOperator
                       value={form.operator1}
@@ -204,7 +209,7 @@ export default function Page() {
                     />
 
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex  gap-2">
                     <Input disabled={isPending} ref={inputRef}
                       type="number"
                       value={form.firstNumber}
@@ -217,6 +222,44 @@ export default function Page() {
                 </div>
 
               }
+
+              {inputQty === "5" &&
+
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-2">
+                    <SelectOperator
+                      value={form.operator1}
+                      onValueChange={(value) => setForm({ ...form, operator1: value })}
+                    />
+                    <SelectOperator
+                      value={form.operator2}
+                      onValueChange={(value) => setForm({ ...form, operator2: value })}
+                    />
+                    <SelectOperator
+                      value={form.operator3}
+                      onValueChange={(value) => setForm({ ...form, operator3: value })}
+                    />
+                    <SelectOperator
+                      value={form.operator4}
+                      onValueChange={(value) => setForm({ ...form, operator4: value })}
+                    />
+
+                  </div>
+                  <div className="flex gap-2">
+                    <Input disabled={isPending} ref={inputRef}
+                      type="number"
+                      value={form.firstNumber}
+                      onChange={(e) => setForm({ ...form, firstNumber: e.target.value })}
+                      placeholder="first number" />
+                    <Input disabled={isPending} type="number" value={form.secondNumber} onChange={(e) => setForm({ ...form, secondNumber: e.target.value })} placeholder="second number" />
+                    <Input disabled={isPending} type="number" value={form.thirdNumber} onChange={(e) => setForm({ ...form, thirdNumber: e.target.value })} placeholder="third number" />
+                    <Input disabled={isPending} type="number" value={form.fourthNumber} onChange={(e) => setForm({ ...form, fourthNumber: e.target.value })} placeholder="fourth number" />
+                    <Input disabled={isPending} type="number" value={form.fifthNumber} onChange={(e) => setForm({ ...form, fifthNumber: e.target.value })} placeholder="fifth number" />
+                  </div>
+                </div>
+
+              }
+
             </>
         }
         <Button type="submit" disabled={!form.level || !form.firstNumber || !form.operator1 || ((form.operator1 === "sqrt" || form.operator1 === "pow") ? false : !form.secondNumber) || isPending} className="w-full">{isPending ? <Loader2 className="animate-spin w-4 h-4" /> : "Submit"}</Button>
