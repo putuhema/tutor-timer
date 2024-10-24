@@ -17,7 +17,7 @@ export default function FormContainer() {
   if (!isDesktop) {
     return (
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent>
+        <DrawerContent className="h-[80%]">
           <div className="p-8 space-y-4">
             <div>
               <DrawerTitle className="text-center">Add New Student</DrawerTitle>

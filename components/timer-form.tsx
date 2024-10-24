@@ -1,7 +1,6 @@
 "use client"
 
 import { Label } from './ui/label'
-import { Input } from './ui/input'
 import {
   Select,
   SelectContent,
@@ -11,24 +10,18 @@ import {
 } from "@/components/ui/select"
 import { Button } from './ui/button'
 import { useEffect, useMemo, useState } from 'react'
-import useStudentStore from '@/store/student'
 import { useDrawerStore } from '@/store/drawer'
 import { createAvatar } from "@dicebear/core"
-import { lorelei, loreleiNeutral } from "@dicebear/collection"
+import { lorelei } from "@dicebear/collection"
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight, Dices } from 'lucide-react'
+import { useGetSubject } from '@/features/subjects/api/use-get-subject'
+import { useCreateSession } from '@/features/session/api/use-create-session'
+import SelectCreateable from './select-createable'
+import { useGetStudents } from '@/features/students/api/use-get-students'
+import { useCreateStudent } from '@/features/students/api/use-create-students'
+import { useCreateSubject } from '@/features/subjects/api/use-create-subject'
 
-
-const subjects = [
-  "Abama",
-  'Prisma',
-  'Cermat',
-  'Mathe',
-  'English',
-  'Calistung',
-  'Komputer',
-  'Pra Baca Tulis'
-]
 
 const collection = [
   'Katherine',
@@ -54,9 +47,15 @@ const collection = [
 ]
 
 export default function TimerForm() {
-  const { addStudent } = useStudentStore()
+  const createSession = useCreateSession()
+
+  const createStudent = useCreateStudent()
+  const createSubject = useCreateSubject()
+
+  const { data: students } = useGetStudents()
   const { setIsOpen } = useDrawerStore()
   const [currentAvatar, setCurrentAvatar] = useState(0)
+  const { data: subjects } = useGetSubject()
   const [form, setForm] = useState({
     studentName: '',
     subject: '',
@@ -74,27 +73,30 @@ export default function TimerForm() {
   }, [currentAvatar, collection])
 
   const onSubmit = () => {
-    const time = parseInt(form.studyDuration) * 60
-    addStudent({
-      name: form.studentName,
-      subject: form.subject,
-      duration: time,
-      timeLeft: time,
-      id: Date.now(),
-      isActive: false,
-      startTime: null,
-      endTime: null,
-      elapsedTime: 0,
-      isCompleted: false,
-      avatar: collection[currentAvatar]
+    const duration = parseInt(form.studyDuration) * 60
+    createSession.mutate({
+      duration,
+      studentId: parseInt(form.studentName),
+      subjectId: parseInt(form.subject),
+      teacherId: 1,
+      timerStatus: 'Pause',
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + duration * 1000),
+      location: 'Tommo',
     })
-    setForm({
-      studentName: '',
-      subject: '',
-      studyDuration: '',
-    });
-    setIsOpen(false)
+
   }
+
+  useEffect(() => {
+    if (createSession.isSuccess) {
+      setForm({
+        studentName: '',
+        subject: '',
+        studyDuration: '',
+      });
+      setIsOpen(false)
+    }
+  }, [createSession.isSuccess])
 
 
   const pickAvatar = (dir: number) => {
@@ -138,26 +140,32 @@ export default function TimerForm() {
         </div>
         <div className='w-full'>
           <Label htmlFor='studentName'>Student Name</Label>
-          <Input onChange={(e) => setForm({ ...form, studentName: e.target.value })} value={form.studentName} id='studentName' placeholder='Enter Student name' type='text' className='w-full' />
+          {
+            students &&
+            <SelectCreateable
+              onCreate={(e) => {
+                createStudent.mutate({
+                  fullname: e,
+                  nickname: e,
+                })
+              }}
+              dissabled={createStudent.isPending}
+              options={students.map(s => ({ label: s.nickname, value: s.id.toString() }))}
+              onChange={(e) => { setForm({ ...form, studentName: e! }) }} />
+          }
         </div>
       </div>
       <div className='flex gap-4'>
         <div className='w-full'>
           <Label htmlFor='subject'>Subject</Label>
-          <Select value={form.subject} onValueChange={(e) => setForm({ ...form, subject: e })} >
-            <SelectTrigger id='subject'>
-              <SelectValue placeholder='Select subject' />
-            </SelectTrigger>
-            <SelectContent>
-              {
-                subjects.map(subject => (
-                  <SelectItem key={subject} value={subject}>
-                    {subject}
-                  </SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
+          {
+            subjects &&
+            <SelectCreateable
+              onChange={e => setForm({ ...form, subject: e! })}
+              onCreate={(e) => { createSubject.mutate({ name: e }) }}
+              dissabled={createSubject.isPending}
+              options={subjects.map(s => ({ label: s.name, value: s.id.toString() }))} />
+          }
         </div>
         <div className='w-full'>
           <Label htmlFor='studyDuration'>Study Duration</Label>
@@ -166,6 +174,7 @@ export default function TimerForm() {
               <SelectValue placeholder='Select Duration' />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value='1'>1 minutes</SelectItem>
               <SelectItem value='40'>40 minutes</SelectItem>
               <SelectItem value='60'>1 hour</SelectItem>
               <SelectItem value='120'>2 hours</SelectItem>
@@ -174,7 +183,7 @@ export default function TimerForm() {
           </Select>
         </div>
       </div>
-      <Button disabled={!form.studentName || !form.subject || !form.studyDuration} onClick={onSubmit} className='w-full'>Add Student </Button>
+      <Button disabled={!form.studentName || !form.subject || !form.studyDuration || createSession.isPending} onClick={onSubmit} className='w-full'>Add Student </Button>
     </div>
   )
 }

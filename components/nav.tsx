@@ -5,7 +5,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import { Book, Crown, HistoryIcon, Home, Plus, Timer, User, User2Icon, UserRoundPlus, Users } from "lucide-react"
+import { Book, Crown, HistoryIcon, Home, Plus, Timer, TimerIcon, User, User2Icon, UserRoundPlus, Users } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,38 +55,6 @@ export default function Nav() {
   const { setIsOpen } = useDrawerStore();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  if (!isDesktop) {
-    return <>
-      <div className="fixed top-0 w-full bg-white z-50 shadow-sm">
-        <div className="w-full flex justify-between items-center px-8 py-4">
-          <div className={cn("px-4 p-2 font-bold text-xl tracking-wider", pacifico.className)}>Tutor.<span className="text-blue-500">me</span> </div>
-          {
-            pathname === '/' && (
-              <Button onClick={() => setIsOpen(true)} variant="default"><UserRoundPlus className="w-6 h-6" /></Button>
-            )
-          }
-        </div>
-      </div>
-      <nav className="fixed bottom-0 w-full z-50">
-        <div className="w-full rounded-t-xl bg-white border">
-          <ul className="flex justify-around group gap-4 items-center w-full p-2 px-8">
-            {
-              links.map((link) => (
-                <Link href={link.href} key={link.title}>
-                  <li className={cn("flex items-center flex-col group")}>
-                    <div className={cn("p-2 border rounded-lg hover:bg-accent", pathname === link.href ? "bg-accent border-blue-500 [&>svgs]:text-blue-500" : "")}>
-                      <link.icon className="w-6 h-6" />
-                    </div>
-                    <p className="text-center text-xs text-muted-foreground">{link.title}</p>
-                  </li>
-                </Link>
-              ))
-            }
-          </ul>
-        </div>
-      </nav>
-    </>
-  }
 
   return (
     <nav className="p-4 flex justify-end items-center">
@@ -105,7 +73,20 @@ export default function Nav() {
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsOpen(true)}> <Users className="w-4 h-4 mr-2 text-muted-foreground" /> Add New Student</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem> <Crown className="w-4 h-4 mr-2 text-muted-foreground" /> Leaderboard</DropdownMenuItem>
+          <Link href="/programs">
+            <DropdownMenuItem>
+              <Book className="w-4 h-4 mr-2 text-muted-foreground" /> Programs
+            </DropdownMenuItem>
+          </Link>
+
+          <Link href="/dashboard">
+            <DropdownMenuItem>
+              <Book className="w-4 h-4 mr-2 text-muted-foreground" /> Dashboard
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/">
+            <DropdownMenuItem> <TimerIcon className="w-4 h-4 mr-2 text-muted-foreground" /> Timer</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem> <User2Icon className="w-4 h-4 mr-2 text-muted-foreground" /> Profile</DropdownMenuItem>
           <DropdownMenuItem> <HistoryIcon className="w-4 h-4 mr-2 text-muted-foreground" /> History</DropdownMenuItem>
         </DropdownMenuContent>
