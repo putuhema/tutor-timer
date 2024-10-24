@@ -27,8 +27,10 @@ import { useEffect, useState } from "react"
 import { useSheetStore } from "@/store/sheet"
 import { useCreateTeacher } from "../api/use-create-teacher"
 
+const SHEET_ID = 'teacher-form'
+
 export default function TeacherForm() {
-  const { isOpen, setIsOpen } = useSheetStore()
+  const { getSheet, toggleSheet } = useSheetStore()
   const { mutate, isSuccess } = useCreateTeacher()
 
   const form = useForm<z.infer<typeof createTeacherSchema>>({
@@ -48,13 +50,13 @@ export default function TeacherForm() {
   useEffect(() => {
     if (isSuccess) {
       form.reset()
-      setIsOpen(false)
+      toggleSheet(SHEET_ID, false)
     }
   }, [isSuccess])
   return (
 
     <>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={getSheet(SHEET_ID)?.isOpen} onOpenChange={(value) => toggleSheet(SHEET_ID, value)}>
         <SheetTrigger>Add Student</SheetTrigger>
         <SheetContent>
           <SheetHeader>

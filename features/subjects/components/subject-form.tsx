@@ -30,8 +30,10 @@ import { useCreateSubject } from "../api/use-create-subject"
 import { createSubjectSchema } from "../schema"
 import { Textarea } from "@/components/ui/textarea"
 
+const SHEET_ID = 'subject-form'
+
 export default function SubjectForm() {
-  const { isOpen, setIsOpen } = useSheetStore()
+  const { getSheet, toggleSheet } = useSheetStore()
   const { mutate, isSuccess } = useCreateSubject()
   const form = useForm<z.infer<typeof createSubjectSchema>>({
     resolver: zodResolver(createSubjectSchema),
@@ -48,13 +50,13 @@ export default function SubjectForm() {
   useEffect(() => {
     if (isSuccess) {
       form.reset()
-      setIsOpen(false)
+      toggleSheet(SHEET_ID, false)
     }
   }, [isSuccess])
   return (
 
     <>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={getSheet(SHEET_ID)?.isOpen} onOpenChange={(value) => toggleSheet(SHEET_ID, value)}>
         <SheetTrigger>Add Subject</SheetTrigger>
         <SheetContent>
           <SheetHeader>
