@@ -11,10 +11,6 @@ import {
 import { Button } from './ui/button'
 import { useEffect, useMemo, useState } from 'react'
 import { useDrawerStore } from '@/store/drawer'
-import { createAvatar } from "@dicebear/core"
-import { lorelei } from "@dicebear/collection"
-import Image from 'next/image'
-import { ChevronLeft, ChevronRight, Dices } from 'lucide-react'
 import { useGetSubject } from '@/features/subjects/api/use-get-subject'
 import { useCreateSession } from '@/features/session/api/use-create-session'
 import SelectCreateable from './select-createable'
@@ -23,28 +19,6 @@ import { useCreateStudent } from '@/features/students/api/use-create-students'
 import { useCreateSubject } from '@/features/subjects/api/use-create-subject'
 
 
-const collection = [
-  'Katherine',
-  "Mackenzie",
-  "Amaya",
-  "Jade",
-  "Sophia",
-  "Jude",
-  "Leah",
-  "Kimberly",
-  "Sawyer",
-  "Brian",
-  "Avery",
-  "Eliza",
-  "Sara",
-  "Eden",
-  "Nolan",
-  "Alexander",
-  "Liam",
-  "Valentina",
-  "Sarah",
-  "Riley"
-]
 
 export default function TimerForm() {
   const createSession = useCreateSession()
@@ -54,7 +28,6 @@ export default function TimerForm() {
 
   const { data: students } = useGetStudents()
   const { setIsOpen } = useDrawerStore()
-  const [currentAvatar, setCurrentAvatar] = useState(0)
   const { data: subjects } = useGetSubject()
   const [form, setForm] = useState({
     studentName: '',
@@ -62,15 +35,6 @@ export default function TimerForm() {
     studyDuration: '',
   });
 
-  useEffect(() => {
-    setCurrentAvatar(Math.floor(Math.random() * collection.length))
-  }, [])
-
-  const avatar = useMemo(() => {
-    return createAvatar(lorelei, {
-      seed: collection[currentAvatar]
-    }).toDataUri()
-  }, [currentAvatar, collection])
 
   const onSubmit = () => {
     const duration = parseInt(form.studyDuration) * 60
@@ -98,45 +62,11 @@ export default function TimerForm() {
   }, [createSession.isSuccess])
 
 
-  const pickAvatar = (dir: number) => {
-    if (dir === 1) {
-      if (currentAvatar < collection.length - 1) {
-        setCurrentAvatar(currentAvatar + 1)
-      } else if (currentAvatar === collection.length - 1) {
-        setCurrentAvatar(0)
-      }
-    } else if (dir === -1) {
-      if (currentAvatar > 0) {
-        setCurrentAvatar(currentAvatar - 1)
-      } else if (currentAvatar === 0) {
-        setCurrentAvatar(collection.length - 1)
-      }
-    }
-  }
-
-  const randomizeAvatar = () => {
-    setCurrentAvatar(Math.floor(Math.random() * collection.length))
-  }
 
   return (
     <div className='w-full space-y-4'>
       <div className='flex gap-4'>
-        <div className='w-full flex flex-col items-center justify-center space-y-3'>
-          <div className='w-24 h-24'>
-            <Image className='border-2 select-none w-full h-full rounded-full object-cover' src={avatar} alt='Avatar' width={100} height={100} />
-          </div>
-          <div className='flex gap-4 items-center'>
-            <Button size="icon" variant="outline" onClick={() => pickAvatar(-1)}>
-              <ChevronLeft />
-            </Button>
-            <Button size="icon" variant="outline" onClick={randomizeAvatar}><Dices /></Button>
-            <Button
-              size="icon" variant="outline"
-              onClick={() => pickAvatar(1)}>
-              <ChevronRight />
-            </Button>
-          </div>
-        </div>
+
         <div className='w-full'>
           <Label htmlFor='studentName'>Student Name</Label>
           {
@@ -173,7 +103,6 @@ export default function TimerForm() {
               <SelectValue placeholder='Select Duration' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='1'>1 minutes</SelectItem>
               <SelectItem value='40'>40 minutes</SelectItem>
               <SelectItem value='60'>1 hour</SelectItem>
               <SelectItem value='120'>2 hours</SelectItem>

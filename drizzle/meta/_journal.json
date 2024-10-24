@@ -8,6 +8,13 @@
       "when": 1729722237780,
       "tag": "0000_demonic_eternity",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729732478152,
+      "tag": "0001_hot_random",
+      "breakpoints": true
     }
   ]
 }

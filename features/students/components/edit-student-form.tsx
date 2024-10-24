@@ -29,7 +29,11 @@ import { useEffect } from "react"
 import { useSheetStore } from "@/store/sheet"
 import AvatarPicker from "@/components/avatar-picker"
 
-export default function StudentForm() {
+type Props = {
+  id: number
+}
+
+export default function EditStudentForm({ id }: Props) {
   const { isOpen, setIsOpen } = useSheetStore()
   const { mutate, isSuccess } = useCreateStudent()
   const form = useForm<z.infer<typeof createStudentSchema>>({

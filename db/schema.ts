@@ -2,7 +2,6 @@ import { relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
-  primaryKey,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -27,6 +26,7 @@ export const students = pgTable("students", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   fullname: varchar("fullname", { length: 256 }).notNull(),
   nickname: varchar("nickname", { length: 256 }).notNull(),
+  avatar: varchar("avatar", { length: 256 }),
   createdAt: timestamp("created_at", {
     precision: 6,
     withTimezone: true,
