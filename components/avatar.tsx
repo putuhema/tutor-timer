@@ -11,7 +11,7 @@ export default function Avatar({ currentAvatar }: Props) {
 
   const avatar = useMemo(() => {
     return createAvatar(lorelei, {
-      seed: currentAvatar
+      seed: currentAvatar || 'Katherine'
 
     }).toDataUri()
   }, [currentAvatar])

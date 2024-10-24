@@ -34,8 +34,8 @@ type Props = {
 }
 
 export default function AvatarPicker({ value, onChange }: Props) {
-  const [currentAvatar, setCurrentAvatar] = useState(0)
 
+  const [currentAvatar, setCurrentAvatar] = useState(0)
   useEffect(() => {
     if (value) {
       setCurrentAvatar(collection.indexOf(value))

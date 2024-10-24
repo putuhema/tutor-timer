@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Button } from './ui/button'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDrawerStore } from '@/store/drawer'
 import { useGetSubject } from '@/features/subjects/api/use-get-subject'
 import { useCreateSession } from '@/features/session/api/use-create-session'
@@ -19,6 +19,28 @@ import { useCreateStudent } from '@/features/students/api/use-create-students'
 import { useCreateSubject } from '@/features/subjects/api/use-create-subject'
 
 
+const collection = [
+  'Katherine',
+  "Mackenzie",
+  "Amaya",
+  "Jade",
+  "Sophia",
+  "Jude",
+  "Leah",
+  "Kimberly",
+  "Sawyer",
+  "Brian",
+  "Avery",
+  "Eliza",
+  "Sara",
+  "Eden",
+  "Nolan",
+  "Alexander",
+  "Liam",
+  "Valentina",
+  "Sarah",
+  "Riley"
+]
 
 export default function TimerForm() {
   const createSession = useCreateSession()
@@ -62,7 +84,6 @@ export default function TimerForm() {
   }, [createSession.isSuccess])
 
 
-
   return (
     <div className='w-full space-y-4'>
       <div className='flex gap-4'>
@@ -76,6 +97,7 @@ export default function TimerForm() {
                 createStudent.mutate({
                   fullname: e,
                   nickname: e,
+                  avatar: collection[Math.floor(Math.random() * collection.length)]
                 })
               }}
               dissabled={createStudent.isPending}
@@ -103,7 +125,6 @@ export default function TimerForm() {
               <SelectValue placeholder='Select Duration' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='1'>1 minutes</SelectItem>
               <SelectItem value='40'>40 minutes</SelectItem>
               <SelectItem value='60'>1 hour</SelectItem>
               <SelectItem value='120'>2 hours</SelectItem>
