@@ -71,7 +71,12 @@ export default function Nav() {
             <Badge variant="outline">Teacher</Badge>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsOpen(true)}> <Users className="w-4 h-4 mr-2 text-muted-foreground" /> Add New Student</DropdownMenuItem>
+          {
+            pathname === "/" && (
+              <DropdownMenuItem onClick={() => setIsOpen(true)}>
+                <Users className="w-4 h-4 mr-2 text-muted-foreground" /> Add New Student</DropdownMenuItem>
+            )
+          }
           <DropdownMenuSeparator />
           <Link href="/programs">
             <DropdownMenuItem>

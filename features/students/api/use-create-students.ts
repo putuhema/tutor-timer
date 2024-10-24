@@ -24,7 +24,6 @@ export const useCreateStudent = () => {
     RequestType
   >({
     mutationFn: async (body: RequestType) => {
-      console.log(body);
       const response = await client.api.students.$post({
         json: body,
       });

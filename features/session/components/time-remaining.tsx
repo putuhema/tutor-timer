@@ -57,7 +57,7 @@ export default function TimeRemaining({ subjectTimeLogId, endTime, status }: Pro
 
 
   return <div className="text-center">
-    <p className="text-3xl font-bold">
+    <p className="text-5xl font-bold">
       {formatTime(timeRemaining)}
     </p>
     <p className="text-sm text-muted-foreground">{Math.floor(timeRemaining / 60)} minutes left</p>

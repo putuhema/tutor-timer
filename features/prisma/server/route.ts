@@ -5,7 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { createPrismaSchema } from "../schema";
 import { db } from "@/db";
 import { prismaData } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 const app = new Hono()
   .get(
@@ -24,7 +24,8 @@ const app = new Hono()
             eq(prismaData.level, parseInt(level)),
             eq(prismaData.page, parseInt(page))
           )
-        );
+        )
+        .orderBy(asc(prismaData.id));
 
       return c.json({ data });
     }

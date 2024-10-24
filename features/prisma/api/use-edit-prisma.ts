@@ -31,8 +31,6 @@ export const useEditPrisma = (id: number) => {
         },
       });
 
-      console.log(response);
-
       return response.json();
     },
     onSuccess: (body) => {
